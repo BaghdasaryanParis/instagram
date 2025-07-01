@@ -3,11 +3,12 @@ import './style.css';
 import { useState, useEffect } from "react";
 import instagram from '../../images/instagram.png'
 import instagramlogo from '../../images/Instagramlogo.png'
-export default function Login() {
+import { useRouter } from 'next/navigation';
+export default function Index() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [token, setToken] = useState('');
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleLoginClick = () => {
     const loginData = { email, password };
@@ -23,60 +24,17 @@ export default function Login() {
         const data = await res.json();
 
         if (!res.ok) {
-          throw new Error(data.message || 'Login failed');
+          throw new Error(data.message || 'Index failed');
         }
-
-        console.log('Login success:', data.token);
-        setToken(data.token);
-        localStorage.setItem('token', data.token);
+        if(data.token){
+          localStorage.setItem('token', data.token);
+          router.push("/user");
+        }
       })
       .catch((err) => {
-        console.error('Login failed:', err.message);
-        alert(err.message);
+        console.error('Index failed:', err.message);
       });
   };
-
-  const fetchUserData = () => {
-    const storedToken = localStorage.getItem('token');
-
-    if (!storedToken) {
-      console.error('No token found');
-      return;
-    }
-
-    fetch('http://localhost:5000/user/me', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${storedToken}`,
-      },
-    })
-      .then(async (res) => {
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.message || 'Failed to fetch user data');
-        }
-
-        setLoading(true);
-      })
-      .catch((err) => {
-        console.error('Error fetching user:', err.message);
-      });
-  };
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    if (storedToken) {
-      setToken(storedToken);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (token) {
-      fetchUserData();
-    }
-  }, [token]);
-
   return (
     <div className="flex min-h-screen">
       <div className="w-1/2 flex items-center justify-center ">
@@ -106,7 +64,12 @@ export default function Login() {
           <div className="text-center mt-4">
             <span>
              Don't have an account?{" "}
-              <span className="text-blue-500 cursor-pointer hover:underline">Sign up</span>
+              <span
+                className="text-blue-500 cursor-pointer hover:underline"
+                onClick={() => router.push('/signup')}
+              >
+                Sign up
+              </span>
             </span>
           </div>
         </div>
