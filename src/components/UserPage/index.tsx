@@ -7,7 +7,7 @@ export default function UserPage() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch("http://localhost:5000/user/me", {
+    fetch("http://localhost:5000/users", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

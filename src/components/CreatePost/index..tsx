@@ -27,7 +27,7 @@ export default function CreatePost() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/post", {
+      const res = await fetch("http://localhost:5000/posts", {
         method: "POST",
         body: formData,
         headers:{
