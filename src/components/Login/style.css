@@ -1,0 +1,6 @@
+@import "../../../node_modules/tailwindcss/dist/lib.d.mts";
+@theme {
+    input{
+        border:1px solid black;
+    }
+}
